@@ -311,16 +311,12 @@ function selectOption(i){
   const allBtns = document.querySelectorAll(".optionBtn");
   allBtns.forEach(b=>b.classList.add("disabled"));
   if(i===q.correct){
-    if (i === q.correct) {
-    buttons[i].classList.add("correct");
+    feedback.textContent="Correto! ✅";
+    feedback.className="feedback correct";
     score++;
-    feedbackEl.textContent = q.feedbackCorrect;
-    feedbackEl.className = "feedback correct";
   } else {
-    buttons[i].classList.add("incorrect");
-    feedbackEl.textContent = q.feedbackWrong;
-    feedbackEl.className = "feedback incorrect";
-  }
+    feedback.textContent="Errado ❌";
+    feedback.className="feedback incorrect";
   }
   feedback.style.display="block";
   btnNext.classList.remove("hidden");
