@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Quiz: Combate ao Cyberbullying</title>
+<style>
+  :root{
+    --bg1:#0f1720;
+    --bg2:#102840;
+    --card:#ffffff;
+    --accent:#0ea5e9;
+    --accent-2:#06b6d4;
+    --success:#16a34a;
+    --danger:#dc2626;
+    --muted:#6b7280;
+  }
+
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:linear-gradient(135deg,var(--bg1),var(--bg2));
+    font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    color:#0f1720;
+    padding:28px;
+  }
+
+  .wrap{
+    width:100%;
+    max-width:820px;
+    background:linear-gradient(180deg, rgba(255,255,255,0.96), rgba(255,255,255,0.92));
+    border-radius:14px;
+    padding:26px;
+    box-shadow:0 10px 30px rgba(2,6,23,0.5);
+    overflow:hidden;
+    position:relative;
+  }
+
+  /* === LOGOS SUPERIORES === */
+  .logos-top {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    margin-bottom: 20px;
+  }
+
+  .logos-top img {
+    height: 80px;
+    object-fit: contain;
+  }
+
+  header.top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+    margin-bottom:10px;
+  }
+
+  header .title{
+    display:flex;
+    gap:14px;
+    align-items:center;
+  }
+
+  .logo {
+    width:56px;height:56px;border-radius:10px;
+    background:linear-gradient(135deg,var(--accent),var(--accent-2));
+    display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:20px;
+    box-shadow:0 6px 18px rgba(6,182,212,0.22);
+  }
+
+  h1{margin:0;font-size:1.25rem;color:var(--bg1);}
+
+  .progressWrap{
+    text-align:right;font-size:0.9rem;color:var(--muted);
+  }
+
+  .progressBar{
+    height:10px;background:#e6eef6;border-radius:999px;margin-top:8px;overflow:hidden;
+  }
+
+  .progressFill{
+    height:100%;width:0%;background:linear-gradient(90deg,var(--accent),var(--accent-2));
+    transition:width 450ms cubic-bezier(.2,.9,.25,1);
+  }
+
+  main{
+    margin-top:12px;
+    min-height:260px;
+    display:flex;
+    gap:18px;
+    align-items:flex-start;
+  }
+
+  .left{flex:1;padding:18px 6px;}
+  .card{background:transparent;border-radius:10px;padding:10px;}
+
+  .questionBox{
+    background:linear-gradient(180deg,#ffffff,#f7fbff);
+    border-radius:12px;padding:20px;box-shadow:0 6px 14px rgba(2,6,23,0.06);
+    transition:transform 420ms ease, opacity 420ms ease;
+    transform-origin:center top;
+  }
+
+  .questionNumber{font-size:0.85rem;color:var(--muted);margin-bottom:6px;}
+  .questionText{font-size:1.05rem;color:var(--bg1);margin:0 0 8px 0;font-weight:600}
+
+  .options{display:flex;flex-direction:column;gap:10px;margin-top:12px}
+  .optionBtn{
+    display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:10px;border:1px solid rgba(15,23,32,0.06);
+    background:white;cursor:pointer;font-weight:600;color:var(--bg1);transition:box-shadow 200ms, transform 120ms, background 200ms;
+  }
+  .optionBtn:hover{transform:translateY(-3px);box-shadow:0 8px 18px rgba(2,6,23,0.06)}
+  .optionBtn.disabled{opacity:0.6;cursor:default;transform:none;box-shadow:none}
+  .optionLabel{flex:1;text-align:left}
+
+  .feedback{
+    margin-top:14px;padding:12px;border-radius:10px;font-weight:600;display:none;
+    animation:fadeIn 360ms ease forwards;
+  }
+  .feedback.correct{background:rgba(16,185,129,0.12);color:var(--success);border:1px solid rgba(16,185,129,0.14)}
+  .feedback.incorrect{background:rgba(239,68,68,0.08);color:var(--danger);border:1px solid rgba(239,68,68,0.12)}
+
+  .controls{display:flex;gap:12px;align-items:center;margin-top:16px}
+  .btn{
+    padding:10px 16px;border-radius:10px;border:none;cursor:pointer;font-weight:700;
+    background:var(--accent);color:white;transition:transform 120ms,opacity 120ms;
+  }
+  .btn.secondary{background:#f3f4f6;color:var(--bg1);border:1px solid rgba(15,23,32,0.06)}
+  .btn:active{transform:translateY(1px)}
+  .btn.hidden{display:none}
+
+  .right{
+    width:260px;flex-shrink:0;
+    display:flex;flex-direction:column;gap:12px;
+  }
+
+  .scoreCard{
+    background:linear-gradient(180deg,#ffffff,#fbfdff);
+    padding:14px;border-radius:12px;box-shadow:0 6px 16px rgba(2,6,23,0.05);text-align:center;
+  }
+  .scoreCard h3{margin:0;font-size:1rem;color:var(--bg1)}
+  .scoreBig{font-size:1.6rem;font-weight:800;color:var(--accent);margin-top:6px}
+  .small{font-size:0.85rem;color:var(--muted);margin-top:6px}
+
+  .resultPanel{
+    margin-top:14px;padding:14px;border-radius:12px;background:linear-gradient(180deg,#ffffff,#fbfdff);
+    box-shadow:0 8px 20px rgba(2,6,23,0.06)
+  }
+
+  @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+  @media (max-width:880px){
+    main{flex-direction:column}
+    .right{width:100%}
+    .logos-top {flex-direction: column; gap: 20px;}
+  }
+</style>
+</head>
+<body>
+  <div class="wrap" role="main" aria-labelledby="title">
+
+    <!-- === LOGOS ADICIONADAS AQUI === -->
+    <div class="logos-top">
+      <img src="jezo-logo.png" alt="JEZO Produções" />
+      <img src="escola-disney-logo.png" alt="Escola Disney" />
+    </div>
+
+    <header class="top">
+      <div class="title">
+        <div class="logo">QB</div>
+        <div>
+          <h1 id="title">Quiz: Combate ao Cyberbullying</h1>
+          <div style="font-size:0.85rem;color:var(--muted)">Dicas e atitudes seguras para lidar com incidentes online</div>
+        </div>
+      </div>
+      <div style="min-width:200px">
+        <div class="progressWrap" aria-hidden="true">
+          <div id="progressText">Pergunta 1 de 5</div>
+          <div class="progressBar" aria-hidden="true"><div class="progressFill" id="progressFill"></div></div>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="left">
+        <div class="card">
+          <div class="questionBox" id="questionBox">
+            <div class="questionNumber" id="questionNumber">Pergunta 1</div>
+            <div class="questionText" id="questionText"></div>
+            <div class="options" id="options"></div>
+            <div class="feedback" id="feedback"></div>
+            <div class="controls">
+              <button class="btn secondary" id="btnRestart">Reiniciar</button>
+              <button class="btn" id="btnNext">Próxima</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <aside class="right">
+        <div class="scoreCard">
+          <h3>Seu Desempenho</h3>
+          <div class="scoreBig" id="score">0%</div>
+          <div class="small" id="scoreText">Vamos começar!</div>
+        </div>
+
+        <div class="resultPanel" id="resultPanel" style="display:none">
+          <h3>Resultado Final</h3>
+          <p id="resultMessage"></p>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+<script>
+const questions = [
+  {
+    q: "Você recebe uma mensagem ofensiva de um colega em um grupo de bate-papo. O que você faz?",
+    options: [
+      "Responde com um xingamento ainda pior para se defender.",
+      "Guarda a mensagem para si e tenta ignorar.",
+      "Bloqueia o colega, salva a conversa como prova e mostra a um adulto de confiança.",
+      "Publica a mensagem em outra rede social para que outras pessoas vejam."
+    ],
+    correct: 2
+  },
+  {
+    q: "Você vê uma foto constrangedora de um colega sendo compartilhada e ridicularizada na internet. Qual é a sua atitude?",
+    options: [
+      "Compartilha a foto com seus amigos, mas não comenta nada.",
+      "Curte a postagem e marca o colega nos comentários.",
+      "Denuncia a postagem na própria plataforma e avisa a pessoa que está sendo afetada para que ela também possa tomar providências.",
+      "Ignora a situação, pois não é problema seu."
+    ],
+    correct: 2
+  },
+  {
+    q: "Alguém cria um perfil falso para espalhar mentiras sobre você. O que você não deve fazer?",
+    options: [
+      "Não responder ao agressor.",
+      "Expor o perfil falso para seus amigos.",
+      "Coletar provas das publicações ofensivas.",
+      "Denunciar o perfil à plataforma e a um responsável."
+    ],
+    correct: 1 // aqui a INCORRETA é a certa
+  },
+  {
+    q: "Um colega está sofrendo ataques online. Como você pode ajudá-lo?",
+    options: [
+      "Fica em silêncio para não se envolver.",
+      "Pede que ele ignore, pois 'é só na internet'.",
+      "Oferece apoio, o encoraja a denunciar e se coloca à disposição para testemunhar, se necessário.",
+      "Sugere que ele revide, respondendo às provocações."
+    ],
+    correct: 2
+  },
+  {
+    q: "Qual é o primeiro passo a ser dado após ser vítima de cyberbullying?",
+    options: [
+      "Deletar todas as mensagens e perfis para esquecer o que aconteceu.",
+      "Discutir publicamente o caso para ganhar apoio.",
+      "Salvar todas as provas, como capturas de tela e URLs, e buscar a ajuda de um adulto.",
+      "Tentar resolver a situação sozinho, confrontando o agressor."
+    ],
+    correct: 2
+  }
+];
+
+let current = 0;
+let score = 0;
+
+const questionText = document.getElementById("questionText");
+const optionsEl = document.getElementById("options");
+const feedback = document.getElementById("feedback");
+const btnNext = document.getElementById("btnNext");
+const btnRestart = document.getElementById("btnRestart");
+const progressText = document.getElementById("progressText");
+const progressFill = document.getElementById("progressFill");
+const scoreEl = document.getElementById("score");
+const scoreText = document.getElementById("scoreText");
+const resultPanel = document.getElementById("resultPanel");
+const resultMessage = document.getElementById("resultMessage");
+
+function showQuestion(){
+  const q = questions[current];
+  questionText.textContent = q.q;
+  optionsEl.innerHTML = "";
+  feedback.style.display="none";
+  q.options.forEach((opt, i)=>{
+    const btn = document.createElement("button");
+    btn.className="optionBtn";
+    btn.innerHTML = `<span class="optionLabel">${opt}</span>`;
+    btn.onclick = ()=>selectOption(i);
+    optionsEl.appendChild(btn);
+  });
+  document.getElementById("questionNumber").textContent = `Pergunta ${current+1}`;
+  progressText.textContent = `Pergunta ${current+1} de ${questions.length}`;
+  progressFill.style.width = ((current)/questions.length)*100 + "%";
+  btnNext.classList.add("hidden");
+}
+
+function selectOption(i){
+  const q = questions[current];
+  const allBtns = document.querySelectorAll(".optionBtn");
+  allBtns.forEach(b=>b.classList.add("disabled"));
+  if(i===q.correct){
+    feedback.textContent="Correto! ✅";
+    feedback.className="feedback correct";
+    score++;
+  } else {
+    feedback.textContent="Errado ❌";
+    feedback.className="feedback incorrect";
+  }
+  feedback.style.display="block";
+  btnNext.classList.remove("hidden");
+  updateScore();
+}
+
+function updateScore(){
+  const percent = Math.round((score/questions.length)*100);
+  scoreEl.textContent = percent+"%";
+  if(percent===0) scoreText.textContent="Vamos começar!";
+  else if(percent<50) scoreText.textContent="Continue tentando!";
+  else if(percent<80) scoreText.textContent="Bom trabalho!";
+  else scoreText.textContent="Excelente!";
+}
+
+btnNext.onclick = ()=>{
+  current++;
+  if(current<questions.length){
+    showQuestion();
+  }else{
+    finishQuiz();
+  }
+};
+
+btnRestart.onclick = ()=>{
+  current=0;score=0;
+  resultPanel.style.display="none";
+  btnNext.textContent="Próxima";
+  showQuestion();
+  updateScore();
+};
+
+function finishQuiz(){
+  feedback.style.display="none";
+  optionsEl.innerHTML="";
+  questionText.textContent="Quiz finalizado!";
+  progressFill.style.width="100%";
+  btnNext.classList.add("hidden");
+  resultPanel.style.display="block";
+  const percent = Math.round((score/questions.length)*100);
+  if(percent>=80){
+    resultMessage.textContent="Parabéns! Você entende bem sobre o combate ao cyberbullying!";
+  }else if(percent>=50){
+    resultMessage.textContent="Bom desempenho! Continue aprendendo sobre o tema.";
+  }else{
+    resultMessage.textContent="Que tal tentar novamente e aprender mais?";
+  }
+}
+
+showQuestion();
+updateScore();
+</script>
+</body>
+</html>
