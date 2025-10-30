@@ -40,6 +40,7 @@
     position:relative;
   }
 
+  /* === LOGOS SUPERIORES === */
   .logos-top {
     display: flex;
     justify-content: center;
@@ -117,18 +118,6 @@
   }
   .optionBtn:hover{transform:translateY(-3px);box-shadow:0 8px 18px rgba(2,6,23,0.06)}
   .optionBtn.disabled{opacity:0.6;cursor:default;transform:none;box-shadow:none}
-
-  /* === Classes que faltavam === */
-  .optionBtn.correct {
-    background: rgba(16,185,129,0.15);
-    border-color: var(--success);
-  }
-
-  .optionBtn.incorrect {
-    background: rgba(239,68,68,0.15);
-    border-color: var(--danger);
-  }
-
   .optionLabel{flex:1;text-align:left}
 
   .feedback{
@@ -160,6 +149,11 @@
   .scoreBig{font-size:1.6rem;font-weight:800;color:var(--accent);margin-top:6px}
   .small{font-size:0.85rem;color:var(--muted);margin-top:6px}
 
+  .resultPanel{
+    margin-top:14px;padding:14px;border-radius:12px;background:linear-gradient(180deg,#ffffff,#fbfdff);
+    box-shadow:0 8px 20px rgba(2,6,23,0.06)
+  }
+
   @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 
   @media (max-width:880px){
@@ -170,8 +164,9 @@
 </style>
 </head>
 <body>
-  <div class="wrap">
+  <div class="wrap" role="main" aria-labelledby="title">
 
+    <!-- === LOGOS ADICIONADAS AQUI === -->
     <div class="logos-top">
       <img src="jezo-logo.png" alt="JEZO Produções" />
       <img src="escola-disney-logo.png" alt="Escola Disney" />
@@ -181,142 +176,142 @@
       <div class="title">
         <div class="logo">QB</div>
         <div>
-          <h1>Quiz: Combate ao Cyberbullying</h1>
+          <h1 id="title">Quiz: Combate ao Cyberbullying</h1>
           <div style="font-size:0.85rem;color:var(--muted)">Dicas e atitudes seguras para lidar com incidentes online</div>
         </div>
       </div>
       <div style="min-width:200px">
-        <div class="progressWrap">
+        <div class="progressWrap" aria-hidden="true">
           <div id="progressText">Pergunta 1 de 5</div>
-          <div class="progressBar"><div class="progressFill" id="progressFill"></div></div>
+          <div class="progressBar" aria-hidden="true"><div class="progressFill" id="progressFill"></div></div>
         </div>
       </div>
     </header>
 
     <main>
-      <div class="left">
-        <div class="questionBox">
-          <div class="questionNumber" id="questionNumber"></div>
-          <div class="questionText" id="questionText"></div>
-          <div class="options" id="options"></div>
-          <div class="feedback" id="feedback"></div>
+      <section class="left">
+        <div class="card">
+          <div class="questionBox" id="questionBox">
+            <div class="questionNumber" id="questionNumber">Pergunta 1</div>
+            <div class="questionText" id="questionText"></div>
+            <div class="options" id="options"></div>
+            <div class="feedback" id="feedback"></div>
+            <div class="controls">
+              <button class="btn secondary" id="btnRestart">Reiniciar</button>
+              <button class="btn" id="btnNext">Próxima</button>
+            </div>
+          </div>
         </div>
-        <div class="controls">
-          <button class="btn secondary" id="prevBtn">Anterior</button>
-          <button class="btn" id="nextBtn">Próxima</button>
-        </div>
-      </div>
+      </section>
 
-      <div class="right">
+      <aside class="right">
         <div class="scoreCard">
-          <h3>Pontuação</h3>
-          <div class="scoreBig" id="score">0</div>
-          <div class="small">Respostas corretas</div>
+          <h3>Seu Desempenho</h3>
+          <div class="scoreBig" id="score">0%</div>
+          <div class="small" id="scoreText">Vamos começar!</div>
         </div>
-      </div>
+
+        <div class="resultPanel" id="resultPanel" style="display:none">
+          <h3>Resultado Final</h3>
+          <p id="resultMessage"></p>
+        </div>
+      </aside>
     </main>
   </div>
 
 <script>
-const quizData = [
+const questions = [
   {
-    question: "Você recebe uma mensagem ofensiva de um colega em um grupo de bate-papo. O que você faz?",
+    q: "Você recebe uma mensagem ofensiva de um colega em um grupo de bate-papo. O que você faz?",
     options: [
       "Responde com um xingamento ainda pior para se defender.",
       "Guarda a mensagem para si e tenta ignorar.",
       "Bloqueia o colega, salva a conversa como prova e mostra a um adulto de confiança.",
       "Publica a mensagem em outra rede social para que outras pessoas vejam."
     ],
-    correct: 2,
-    feedbackCorrect: "✅ Correto! Bloquear, salvar a conversa como prova e avisar um adulto é a melhor atitude.",
-    feedbackWrong: "❌ O ideal é bloquear, guardar provas e mostrar a um adulto de confiança."
+    correct: 2
   },
   {
-    question: "Você vê uma foto constrangedora de um colega sendo compartilhada e ridicularizada na internet. Qual é a sua atitude?",
+    q: "Você vê uma foto constrangedora de um colega sendo compartilhada e ridicularizada na internet. Qual é a sua atitude?",
     options: [
       "Compartilha a foto com seus amigos, mas não comenta nada.",
       "Curte a postagem e marca o colega nos comentários.",
       "Denuncia a postagem na própria plataforma e avisa a pessoa que está sendo afetada para que ela também possa tomar providências.",
       "Ignora a situação, pois não é problema seu."
     ],
-    correct: 2,
-    feedbackCorrect: "✅ Perfeito! Denunciar e avisar a vítima mostra empatia e ajuda a combater o cyberbullying.",
-    feedbackWrong: "❌ Curtir, compartilhar ou ignorar também alimenta o bullying. Sempre denuncie e apoie quem está sendo atacado."
+    correct: 2
   },
   {
-    question: "Alguém cria um perfil falso para espalhar mentiras sobre você. O que você NÃO deve fazer?",
+    q: "Alguém cria um perfil falso para espalhar mentiras sobre você. O que você não deve fazer?",
     options: [
       "Não responder ao agressor.",
       "Expor o perfil falso para seus amigos.",
       "Coletar provas das publicações ofensivas.",
       "Denunciar o perfil à plataforma e a um responsável."
     ],
-    correct: 1,
-    feedbackCorrect: "✅ Certo! Expor o perfil falso só espalha mais o problema.",
-    feedbackWrong: "❌ Cuidado! Responder, divulgar ou ignorar o perfil pode piorar a situação."
+    correct: 1 // aqui a INCORRETA é a certa
   },
   {
-    question: "Um colega está sofrendo ataques online. Como você pode ajudá-lo?",
+    q: "Um colega está sofrendo ataques online. Como você pode ajudá-lo?",
     options: [
       "Fica em silêncio para não se envolver.",
       "Pede que ele ignore, pois 'é só na internet'.",
       "Oferece apoio, o encoraja a denunciar e se coloca à disposição para testemunhar, se necessário.",
       "Sugere que ele revide, respondendo às provocações."
     ],
-    correct: 2,
-    feedbackCorrect: "✅ Exatamente! Oferecer apoio, incentivar a denúncia e estar ao lado da vítima faz toda a diferença.",
-    feedbackWrong: "❌ Ignorar ou incentivar a vingança nunca ajuda. Apoie o colega e mostre que ele não está sozinho."
+    correct: 2
   },
   {
-    question: "Qual é o primeiro passo a ser dado após ser vítima de cyberbullying?",
+    q: "Qual é o primeiro passo a ser dado após ser vítima de cyberbullying?",
     options: [
       "Deletar todas as mensagens e perfis para esquecer o que aconteceu.",
       "Discutir publicamente o caso para ganhar apoio.",
       "Salvar todas as provas, como capturas de tela e URLs, e buscar a ajuda de um adulto.",
       "Tentar resolver a situação sozinho, confrontando o agressor."
     ],
-    correct: 2,
-    feedbackCorrect: "✅ Correto! Guardar provas e procurar um adulto de confiança é essencial.",
-    feedbackWrong: "❌ Deletar mensagens ou enfrentar o agressor sozinho pode piorar. Guarde provas e busque ajuda."
+    correct: 2
   }
 ];
 
-let currentQuestion = 0;
+let current = 0;
 let score = 0;
 
 const questionText = document.getElementById("questionText");
-const optionsContainer = document.getElementById("options");
-const questionNumber = document.getElementById("questionNumber");
-const scoreEl = document.getElementById("score");
+const optionsEl = document.getElementById("options");
+const feedback = document.getElementById("feedback");
+const btnNext = document.getElementById("btnNext");
+const btnRestart = document.getElementById("btnRestart");
 const progressText = document.getElementById("progressText");
 const progressFill = document.getElementById("progressFill");
-const feedbackEl = document.getElementById("feedback");
+const scoreEl = document.getElementById("score");
+const scoreText = document.getElementById("scoreText");
+const resultPanel = document.getElementById("resultPanel");
+const resultMessage = document.getElementById("resultMessage");
 
-function loadQuestion() {
-  const q = quizData[currentQuestion];
-  questionNumber.textContent = `Pergunta ${currentQuestion + 1}`;
-  questionText.textContent = q.question;
-  optionsContainer.innerHTML = "";
-  feedbackEl.style.display = "none";
-
-  q.options.forEach((option, i) => {
+function showQuestion(){
+  const q = questions[current];
+  questionText.textContent = q.q;
+  optionsEl.innerHTML = "";
+  feedback.style.display="none";
+  q.options.forEach((opt, i)=>{
     const btn = document.createElement("button");
-    btn.className = "optionBtn";
-    btn.innerHTML = `<span class="optionLabel">${option}</span>`;
-    btn.onclick = () => selectOption(i);
-    optionsContainer.appendChild(btn);
+    btn.className="optionBtn";
+    btn.innerHTML = `<span class="optionLabel">${opt}</span>`;
+    btn.onclick = ()=>selectOption(i);
+    optionsEl.appendChild(btn);
   });
-
-  progressText.textContent = `Pergunta ${currentQuestion + 1} de ${quizData.length}`;
-  progressFill.style.width = `${((currentQuestion + 1) / quizData.length) * 100}%`;
+  document.getElementById("questionNumber").textContent = `Pergunta ${current+1}`;
+  progressText.textContent = `Pergunta ${current+1} de ${questions.length}`;
+  progressFill.style.width = ((current)/questions.length)*100 + "%";
+  btnNext.classList.add("hidden");
 }
 
-function selectOption(i) {
-  const q = quizData[currentQuestion];
-  const buttons = document.querySelectorAll(".optionBtn");
-  buttons.forEach(btn => btn.classList.add("disabled"));
-
-  if (i === q.correct) {
+function selectOption(i){
+  const q = questions[current];
+  const allBtns = document.querySelectorAll(".optionBtn");
+  allBtns.forEach(b=>b.classList.add("disabled"));
+  if(i===q.correct){
+    if (i === q.correct) {
     buttons[i].classList.add("correct");
     score++;
     feedbackEl.textContent = q.feedbackCorrect;
@@ -326,29 +321,57 @@ function selectOption(i) {
     feedbackEl.textContent = q.feedbackWrong;
     feedbackEl.className = "feedback incorrect";
   }
-
-  feedbackEl.style.display = "block";
-  scoreEl.textContent = score;
+  }
+  feedback.style.display="block";
+  btnNext.classList.remove("hidden");
+  updateScore();
 }
 
-document.getElementById("nextBtn").onclick = () => {
-  if (currentQuestion < quizData.length - 1) {
-    currentQuestion++;
-    loadQuestion();
-  } else {
-    alert(`Quiz finalizado! Você acertou ${score} de ${quizData.length} perguntas.`);
+function updateScore(){
+  const percent = Math.round((score/questions.length)*100);
+  scoreEl.textContent = percent+"%";
+  if(percent===0) scoreText.textContent="Vamos começar!";
+  else if(percent<50) scoreText.textContent="Continue tentando!";
+  else if(percent<80) scoreText.textContent="Bom trabalho!";
+  else scoreText.textContent="Excelente!";
+}
+
+btnNext.onclick = ()=>{
+  current++;
+  if(current<questions.length){
+    showQuestion();
+  }else{
+    finishQuiz();
   }
 };
 
-document.getElementById("prevBtn").onclick = () => {
-  if (currentQuestion > 0) {
-    currentQuestion--;
-    loadQuestion();
-  }
+btnRestart.onclick = ()=>{
+  current=0;score=0;
+  resultPanel.style.display="none";
+  btnNext.textContent="Próxima";
+  showQuestion();
+  updateScore();
 };
 
-loadQuestion();
+function finishQuiz(){
+  feedback.style.display="none";
+  optionsEl.innerHTML="";
+  questionText.textContent="Quiz finalizado!";
+  progressFill.style.width="100%";
+  btnNext.classList.add("hidden");
+  resultPanel.style.display="block";
+  const percent = Math.round((score/questions.length)*100);
+  if(percent>=80){
+    resultMessage.textContent="Parabéns! Você entende bem sobre o combate ao cyberbullying!";
+  }else if(percent>=50){
+    resultMessage.textContent="Bom desempenho! Continue aprendendo sobre o tema.";
+  }else{
+    resultMessage.textContent="Que tal tentar novamente e aprender mais?";
+  }
+}
+
+showQuestion();
+updateScore();
 </script>
 </body>
 </html>
-
