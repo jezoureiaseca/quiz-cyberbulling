@@ -40,7 +40,6 @@
     position:relative;
   }
 
-  /* === LOGOS SUPERIORES === */
   .logos-top {
     display: flex;
     justify-content: center;
@@ -118,6 +117,18 @@
   }
   .optionBtn:hover{transform:translateY(-3px);box-shadow:0 8px 18px rgba(2,6,23,0.06)}
   .optionBtn.disabled{opacity:0.6;cursor:default;transform:none;box-shadow:none}
+
+  /* === Classes que faltavam === */
+  .optionBtn.correct {
+    background: rgba(16,185,129,0.15);
+    border-color: var(--success);
+  }
+
+  .optionBtn.incorrect {
+    background: rgba(239,68,68,0.15);
+    border-color: var(--danger);
+  }
+
   .optionLabel{flex:1;text-align:left}
 
   .feedback{
@@ -149,11 +160,6 @@
   .scoreBig{font-size:1.6rem;font-weight:800;color:var(--accent);margin-top:6px}
   .small{font-size:0.85rem;color:var(--muted);margin-top:6px}
 
-  .resultPanel{
-    margin-top:14px;padding:14px;border-radius:12px;background:linear-gradient(180deg,#ffffff,#fbfdff);
-    box-shadow:0 8px 20px rgba(2,6,23,0.06)
-  }
-
   @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 
   @media (max-width:880px){
@@ -166,7 +172,6 @@
 <body>
   <div class="wrap">
 
-    <!-- === LOGOS === -->
     <div class="logos-top">
       <img src="jezo-logo.png" alt="JEZO Produções" />
       <img src="escola-disney-logo.png" alt="Escola Disney" />
@@ -223,8 +228,8 @@ const quizData = [
       "Publica a mensagem em outra rede social para que outras pessoas vejam."
     ],
     correct: 2,
-    feedbackCorrect: "✅ Correto! Bloquear, salvar a conversa como prova e avisar um adulto é a melhor atitude. Assim você se protege e ajuda a resolver o caso com responsabilidade.",
-    feedbackWrong: "❌ Não é indicado responder, ignorar ou divulgar. O ideal é bloquear o colega, guardar provas e mostrar a um adulto de confiança."
+    feedbackCorrect: "✅ Correto! Bloquear, salvar a conversa como prova e avisar um adulto é a melhor atitude.",
+    feedbackWrong: "❌ O ideal é bloquear, guardar provas e mostrar a um adulto de confiança."
   },
   {
     question: "Você vê uma foto constrangedora de um colega sendo compartilhada e ridicularizada na internet. Qual é a sua atitude?",
@@ -247,8 +252,8 @@ const quizData = [
       "Denunciar o perfil à plataforma e a um responsável."
     ],
     correct: 1,
-    feedbackCorrect: "✅ Certo! Expor o perfil falso só espalha mais o problema. O melhor é coletar provas e denunciar de forma segura.",
-    feedbackWrong: "❌ Cuidado! Responder, divulgar ou ignorar o perfil pode piorar a situação. Guarde provas e denuncie."
+    feedbackCorrect: "✅ Certo! Expor o perfil falso só espalha mais o problema.",
+    feedbackWrong: "❌ Cuidado! Responder, divulgar ou ignorar o perfil pode piorar a situação."
   },
   {
     question: "Um colega está sofrendo ataques online. Como você pode ajudá-lo?",
@@ -271,8 +276,8 @@ const quizData = [
       "Tentar resolver a situação sozinho, confrontando o agressor."
     ],
     correct: 2,
-    feedbackCorrect: "✅ Correto! Guardar provas e procurar um adulto de confiança é essencial para resolver o caso da forma certa.",
-    feedbackWrong: "❌ Deletar mensagens ou enfrentar o agressor sozinho pode piorar. Guarde provas e busque ajuda de alguém de confiança."
+    feedbackCorrect: "✅ Correto! Guardar provas e procurar um adulto de confiança é essencial.",
+    feedbackWrong: "❌ Deletar mensagens ou enfrentar o agressor sozinho pode piorar. Guarde provas e busque ajuda."
   }
 ];
 
@@ -346,3 +351,4 @@ loadQuestion();
 </script>
 </body>
 </html>
+
